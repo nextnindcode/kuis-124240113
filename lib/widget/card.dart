@@ -2,148 +2,44 @@ import 'package:flutter/material.dart';
 
 import '../model/pokemon.dart';
 import '../theme/app_theme.dart';
+import 'chip.dart';
 
-//card hewan buat grid di halaman home dan favorit
-//dipisah jadi widget sendiri biar gak nulis kode yang sama dua kali
+//satu baris pokemon di halaman Beranda: gambar, nama, types, dan ikon info
 class PokemonCard extends StatelessWidget {
   final Pokemon pokemon;
-  final bool isFavorite;
-  final VoidCallback onTap; // buka halaman detail
-  final VoidCallback onFavoriteTap; // toggle favorit
+  final VoidCallback onTap; //buka halaman detail
 
-  const PokemonCard({
-    super.key,
-    required this.pokemon,
-    required this.isFavorite,
-    required this.onTap,
-    required this.onFavoriteTap,
-  });
+  const PokemonCard({super.key, required this.pokemon, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap, // seluruh kartu bisa ditekan
-      child: Container(
-        decoration: BoxDecoration(
-          color: AppColors.putih,
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.coklatTua.withOpacity(0.15),
-              blurRadius: 8,
-              offset: const Offset(0, 4),
-            ),
-          ],
+    return Card(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+      elevation: 3,
+      color: AppColors.putih,
+      child: ListTile(
+        onTap: onTap, //seluruh baris bisa diklik
+        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        leading: Image.network(
+          pokemon.image,
+          width: 56,
+          height: 56,
+          fit: BoxFit.contain,
+          errorBuilder: (context, error, stack) =>
+              const Icon(Icons.image_not_supported, size: 40),
         ),
-        clipBehavior: Clip.antiAlias, // biar foto ikut kepotong sudut rounded
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              // Stack: numpuk foto + badge tipe + tombol hati
-              child: Stack(
-                fit: StackFit.expand,
-                children: [
-                  Image.network(
-                    pokemon.image,
-                    fit: BoxFit.cover,
-                    // tampil loading selama foto diunduh
-                    loadingBuilder: (context, child, progress) {
-                      if (progress == null) return child;
-                      return Container(
-                        color: AppColors.krem,
-                        child: const Center(
-                          child: CircularProgressIndicator(
-                            color: AppColors.hijauTua,
-                          ),
-                        ),
-                      );
-                    },
-                    // kalau gagal load, tampil ikon
-                    errorBuilder: (context, error, stack) => Container(
-                      color: AppColors.krem,
-                      child: const Icon(
-                        Icons.image_not_supported,
-                        color: AppColors.hijauTua,
-                      ),
-                    ),
-                  ),
-                  // badge tipe di pojok kiri atas
-                  Positioned(
-                    top: 8,
-                    left: 8,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 4,
-                      ),
-                      decoration: BoxDecoration(
-                        color: AppColors.coklatTua.withOpacity(0.85),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Text(
-                        pokemon.types.join(', '),
-                        style: const TextStyle(
-                          color: AppColors.krem,
-                          fontSize: 10,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
-                  // tombol hati di pojok kanan atas, ikon ganti sesuai isFavorite
-                  Positioned(
-                    top: 0,
-                    right: 0,
-                    child: IconButton(
-                      onPressed: onFavoriteTap,
-                      icon: Icon(
-                        isFavorite ? Icons.favorite : Icons.favorite_border,
-                        color: isFavorite ? Colors.redAccent : AppColors.krem,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    pokemon.name,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.coklatTua,
-                      fontSize: 14,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Row(
-                    children: [
-                      const Icon(
-                        Icons.monitor_weight_outlined,
-                        size: 12,
-                        color: AppColors.hijauTua,
-                      ),
-                      const SizedBox(width: 4),
-                      Text(
-                        '${pokemon.weight} kg',
-                        style: const TextStyle(
-                          fontSize: 11,
-                          color: AppColors.hijauTua,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ],
+        title: Text(
+          pokemon.name,
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
         ),
+        subtitle: Padding(
+          padding: const EdgeInsets.only(top: 8),
+          child: Wrap(
+            runSpacing: 6,
+            children: pokemon.types.map((t) => TypeChip(label: t)).toList(),
+          ),
+        ),
+        trailing: const Icon(Icons.info, color: Colors.black54),
       ),
     );
   }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'home.dart';
-import 'about.dart';
+import 'profile.dart';
 
 class RootScreen extends StatefulWidget {
   final String username;
@@ -19,22 +19,23 @@ class _RootScreenState extends State<RootScreen> {
   Widget build(BuildContext context) {
     final pages = [
       HomeScreen(username: widget.username),
-      AboutScreen(username: widget.username),
+      ProfileScreen(username: widget.username),
     ];
 
     return Scaffold(
-      body: pages[_selectedIndex],
+      appBar: AppBar(title: const Text('Pokemon App'), centerTitle: true),
+      body: IndexedStack(index: _selectedIndex, children: pages),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         onTap: (index) => setState(() => _selectedIndex = index),
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home_rounded),
-            label: 'Beranda',
+            label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.info_outline_rounded),
-            label: 'Tentang',
+            icon: Icon(Icons.person_rounded),
+            label: 'Profile',
           ),
         ],
       ),

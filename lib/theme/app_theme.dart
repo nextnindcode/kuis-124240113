@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  static const Color coklatTua = Color.fromARGB(
+  static const Color orangeTerang = Color.fromARGB(
     255,
     205,
     126,
     7,
   ); //appbar dan judul
-  static const Color hijauSage = Color.fromARGB(
+  static const Color orangGelap = Color.fromARGB(
     255,
-    149,
-    44,
-    2,
+    157,
+    47,
+    4,
   ); //warna sekunder
-  static const Color hijauTua = Color.fromARGB(
+  static const Color kuning = Color.fromARGB(
     255,
     255,
     208,
@@ -21,6 +21,9 @@ class AppColors {
   ); //ikon dan button
   static const Color krem = Color(0xFFFCECD8); //background
   static const Color putih = Color(0xFFFFFFFF); //card
+  static const Color coklatTua = Color(0xFF7A3F0D); //primary
+  static const Color hijauTua = Color(0xFF2E7D32); //primary button
+  static const Color hijauSage = Color(0xFF8FAF7A); //secondary accent
 }
 
 final ThemeData findPokemonTheme = ThemeData(

@@ -21,13 +21,13 @@ class InfoStat extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.krem,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.hijauSage.withOpacity(0.5)),
+        border: Border.all(color: AppColors.hijauSage.withValues(alpha: 0.5)),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, color: AppColors.hijauTua, size: 22),
-          const SizedBox(height: 6), // SizedBox = spacer kosong
+          Icon(icon, color: AppColors.orangGelap, size: 22),
+          const SizedBox(height: 6),
           Text(
             value,
             style: const TextStyle(
@@ -39,7 +39,7 @@ class InfoStat extends StatelessWidget {
           Text(
             label,
             style: TextStyle(
-              color: AppColors.hijauTua.withOpacity(0.8),
+              color: AppColors.hijauTua.withValues(alpha: 0.8),
               fontSize: 11,
             ),
           ),

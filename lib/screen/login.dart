@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import 'root.dart';
 
-const String _validPassword = '124240113';
+const String _nim = '124240113';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -28,19 +28,25 @@ class _LoginScreenState extends State<LoginScreen> {
   void _login() {
     final username = _usernameController.text.trim();
     final password = _passwordController.text.trim();
+    final messenger = ScaffoldMessenger.of(context);
 
-    if (username.isNotEmpty && password == _validPassword) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('Login berhasil!')));
+    if (username.isNotEmpty && password == _nim) {
+      messenger.showSnackBar(
+        SnackBar(
+          content: Text('Login berhasil! Selamat datang, $username'),
+          backgroundColor: Colors.green,
+        ),
+      );
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => RootScreen(username: username)),
       );
     } else {
       setState(() => _isLoginFailed = true);
-      ScaffoldMessenger.of(context).showSnackBar(
+      messenger.showSnackBar(
         const SnackBar(
-          content: Text('Login gagal: username atau password salah'),
+          content: Text('Login gagal: username kosong atau password salah'),
+          backgroundColor: Colors.red,
         ),
       );
     }
@@ -53,7 +59,6 @@ class _LoginScreenState extends State<LoginScreen> {
       filled: true,
       fillColor: AppColors.putih,
       border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-      //border merah kalau gagal, hijau kalau normal
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
         borderSide: BorderSide(
@@ -74,7 +79,6 @@ class _LoginScreenState extends State<LoginScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 28),
             child: Column(
               mainAxisSize: MainAxisSize.min,
-
               children: [
                 Stack(
                   alignment: Alignment.center,
@@ -83,7 +87,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       width: 130,
                       height: 130,
                       decoration: const BoxDecoration(
-                        color: AppColors.hijauSage,
+                        color: AppColors.orangeTerang,
                         shape: BoxShape.circle,
                       ),
                     ),
@@ -116,12 +120,11 @@ class _LoginScreenState extends State<LoginScreen> {
                 Text(
                   'Masuk dulu untuk melihat koleksi Pokemon anda!',
                   style: TextStyle(
-                    color: AppColors.krem.withOpacity(0.85),
+                    color: AppColors.krem.withValues(alpha: 0.85),
                     fontSize: 13,
                   ),
                 ),
                 const SizedBox(height: 32),
-
                 Container(
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
@@ -140,8 +143,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       const SizedBox(height: 16),
                       TextField(
                         controller: _passwordController,
-                        obscureText:
-                            true, // password disamarkan jadi titik-titik
+                        obscureText: true,
                         decoration: _fieldDecoration(
                           'Password',
                           Icons.lock_outline,
@@ -160,7 +162,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         width: double.infinity,
                         child: ElevatedButton(
                           onPressed: _login,
-                          child: const Text('Masuk'),
+                          child: const Text('Login'),
                         ),
                       ),
                     ],

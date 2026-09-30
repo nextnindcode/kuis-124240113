@@ -1,6 +1,6 @@
 import '../model/pokemon.dart';
 
-List<Pokemon> pokemonList = [
+final List<Pokemon> pokemonList = [
   Pokemon(
     id: 1,
     name: 'Bulbasaur',

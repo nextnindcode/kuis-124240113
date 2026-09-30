@@ -1,103 +1,130 @@
 import 'package:flutter/material.dart';
 
+import '../data/pokemon_list.dart';
 import '../theme/app_theme.dart';
+import '../widget/chip.dart';
+import 'detail.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends StatelessWidget {
   final String username;
+
   const HomeScreen({super.key, required this.username});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  final List<String> _types = const [
-    'Semua',
-    'Normal',
-    'Fire',
-    'Water',
-    'Grass',
-    'Electric',
-    'Ground',
-    'Ice',
-    'Fighting',
-    'Poison',
-    'Flying',
-    'Psychic',
-    'Bug',
-    'Rock',
-    'Ghost',
-    'Dragon',
-  ];
-
-  String _selectedType = 'Semua';
-
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.krem,
-      body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Halo, ${widget.username}!',
-                    style: const TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.coklatTua,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                ],
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Halo, $username!',
+                style: const TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.coklatTua,
+                ),
               ),
-            ),
-            const SizedBox(height: 8),
-            SizedBox(
-              height: 42,
-              child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                itemCount: _types.length,
-                separatorBuilder: (_, __) => const SizedBox(width: 8),
-                itemBuilder: (context, index) {
-                  final type = _types[index];
-                  final isSelected = _selectedType == type;
-
-                  return ChoiceChip(
-                    label: Text(type),
-                    selected: isSelected,
-                    onSelected: (_) {
-                      setState(() {
-                        _selectedType = type;
-                      });
-                    },
-                    backgroundColor: Colors.white,
-                    selectedColor: AppColors.coklatTua.withOpacity(0.15),
-                    labelStyle: TextStyle(
-                      color: isSelected ? AppColors.coklatTua : Colors.black87,
-                      fontWeight: isSelected
-                          ? FontWeight.bold
-                          : FontWeight.normal,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                      side: BorderSide(
-                        color: AppColors.coklatTua.withOpacity(0.3),
-                      ),
-                    ),
-                  );
-                },
+              const SizedBox(height: 4),
+              Text(
+                '${pokemonList.length} Pokemon menantimu untuk dijelajahi',
+                style: TextStyle(
+                  color: AppColors.hijauTua.withValues(alpha: 0.8),
+                  fontSize: 13,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
+        Expanded(
+          child: ListView.builder(
+            padding: const EdgeInsets.fromLTRB(20, 8, 20, 20),
+            itemCount: pokemonList.length,
+            itemBuilder: (context, index) {
+              final pokemon = pokemonList[index];
+
+              return GestureDetector(
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => DetailScreen(pokemon: pokemon),
+                  ),
+                ),
+                child: Container(
+                  margin: const EdgeInsets.only(bottom: 14),
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: AppColors.putih,
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.coklatTua.withValues(alpha: 0.15),
+                        blurRadius: 8,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 72,
+                        height: 72,
+                        padding: const EdgeInsets.all(6),
+                        decoration: BoxDecoration(
+                          color: AppColors.krem,
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Image.network(
+                          pokemon.image,
+                          fit: BoxFit.contain,
+                          errorBuilder: (context, error, stack) => const Icon(
+                            Icons.image_not_supported,
+                            color: AppColors.hijauTua,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 14),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              pokemon.name,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.coklatTua,
+                                fontSize: 16,
+                              ),
+                            ),
+                            const SizedBox(height: 6),
+                            // Wrap: type kedua pindah baris kalau sempit.
+                            Wrap(
+                              spacing: 6,
+                              runSpacing: 6,
+                              children: pokemon.types
+                                  .map((t) => TypeChip(label: t))
+                                  .toList(),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const Icon(
+                        Icons.info_outline,
+                        color: AppColors.orangeTerang,
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
 }
