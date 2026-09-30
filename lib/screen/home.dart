@@ -1,12 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../model/pokemon.dart';
-import '../data/pokemon_list.dart';
 import '../theme/app_theme.dart';
-import '../widget/section.dart';
-import '../widget/card.dart';
-import 'detail.dart';
-import 'root.dart';
 
 class HomeScreen extends StatefulWidget {
   final String username;
@@ -17,6 +11,26 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final List<String> _types = const [
+    'Semua',
+    'Normal',
+    'Fire',
+    'Water',
+    'Grass',
+    'Electric',
+    'Ground',
+    'Ice',
+    'Fighting',
+    'Poison',
+    'Flying',
+    'Psychic',
+    'Bug',
+    'Rock',
+    'Ghost',
+    'Dragon',
+  ];
+
+  String _selectedType = 'Semua';
 
   @override
   Widget build(BuildContext context) {
@@ -43,48 +57,46 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
             ),
-
+            const SizedBox(height: 8),
             SizedBox(
-              height: 40,
-              child: ListView(
+              height: 42,
+              child: ListView.separated(
                 scrollDirection: Axis.horizontal,
                 padding: const EdgeInsets.symmetric(horizontal: 20),
-                children: _types
-                    .map(
-                      (type) => SectionChip(
-                        label: type,
-                        isActive: _selectedType == type,
-                        onTap: () => setState(() => _selectedType = type),
+                itemCount: _types.length,
+                separatorBuilder: (_, __) => const SizedBox(width: 8),
+                itemBuilder: (context, index) {
+                  final type = _types[index];
+                  final isSelected = _selectedType == type;
+
+                  return ChoiceChip(
+                    label: Text(type),
+                    selected: isSelected,
+                    onSelected: (_) {
+                      setState(() {
+                        _selectedType = type;
+                      });
+                    },
+                    backgroundColor: Colors.white,
+                    selectedColor: AppColors.coklatTua.withOpacity(0.15),
+                    labelStyle: TextStyle(
+                      color: isSelected ? AppColors.coklatTua : Colors.black87,
+                      fontWeight: isSelected
+                          ? FontWeight.bold
+                          : FontWeight.normal,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                      side: BorderSide(
+                        color: AppColors.coklatTua.withOpacity(0.3),
                       ),
-                    )
-                    .toList(),
+                    ),
+                  );
+                },
               ),
             ),
-            const SizedBox(height: 8),
-
-            
+          ],
         ),
-      ),
-    );
-  }
-
-  //tampilan kalau pencarian tidak ada hasil
-  Widget _buildEmptyState() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.search_off_rounded,
-            size: 56,
-            color: AppColors.hijauTua.withOpacity(0.5),
-          ),
-          const SizedBox(height: 12),
-          Text(
-            'Satwa "$_keyword" tidak ditemukan',
-            style: TextStyle(color: AppColors.hijauTua.withOpacity(0.8)),
-          ),
-        ],
       ),
     );
   }
